@@ -23,27 +23,29 @@ const init = async () => {
   const radius = Math.max(width, height) / 2;
   const camera = getCamera({ scene, canvas, target, radius });
   const light2 = getLight({ scene, camera });
+  const materialBuilding = Object.assign(new StandardMaterial('mat1', scene), {
+    alpha: 0.5,
+    diffuseColor: new Color3(0.5, 0.5, 1.0),
+    backFaceCulling: false,
+  });
+  const materialPlot = Object.assign(new StandardMaterial('mat1', scene), {
+    alpha: 0.5,
+    diffuseColor: new Color3(0.7, 0.7, 0.7),
+    backFaceCulling: false,
+  });
   buildings.forEach(path => Ribbon({ path }));
   buildings.forEach((path, index) => {
     const plot = path.map(([x, y]) => new Vector2(x, y));
     const polygonBuilder = new PolygonMeshBuilder(`plot${index}`, plot, scene);
     const polygon = polygonBuilder.build(true);
-    polygon.material = Object.assign(new StandardMaterial('mat1', scene), {
-      alpha: 0.5,
-      diffuseColor: new Color3(0.5, 0.5, 1.0),
-      backFaceCulling: false,
-    });
+    polygon.material = materialBuilding;
     polygon.position.y = Ribbon.height * 3;
   });
   plots.forEach((path, index) => {
     const plot = path.map(([x, y]) => new Vector2(x, y));
     const polygonBuilder = new PolygonMeshBuilder(`plot${index}`, plot, scene);
     const polygon = polygonBuilder.build(true, 0.5);
-    polygon.material = Object.assign(new StandardMaterial('mat1', scene), {
-      alpha: 0.5,
-      diffuseColor: new Color3(0.7, 0.7, 0.7),
-      backFaceCulling: false,
-    });
+    polygon.material = materialPlot;
   });
   engine.runRenderLoop(() => scene.render());
 };
